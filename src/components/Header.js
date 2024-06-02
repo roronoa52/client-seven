@@ -6,6 +6,7 @@ import NavMobile from "../components/NavMobile";
 
 const Header = () => {
   const [bg, setBg] = useState(false);
+  const [showButton, setShowButton] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,6 +18,11 @@ const Header = () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  // Fungsi untuk mengubah tampilan button
+  const hideButton = () => {
+    setShowButton(false);
+  };
 
   return (
     <header
@@ -36,11 +42,14 @@ const Header = () => {
         {/* socials */}
         <div className="lg:block hidden">
           <div className="flex gap-2">
-            <button className="btn px-7 py-1 rounded-md bg-green hover:bg-green-700 md:btn-lg transition-all text-white">
-              <a href="/booking">
-                Pesan Sekarang
-              </a>
-            </button>
+            {/* Menggunakan logika kondisional untuk menampilkan button */}
+            {showButton && (
+              <button className="btn px-7 py-1 rounded-md bg-green hover:bg-green-700 md:btn-lg transition-all text-white">
+                <p>
+                  Pesan Sekarang
+                </p>
+              </button>
+            )}
           </div>
         </div>
         {/* NavMobile */}
