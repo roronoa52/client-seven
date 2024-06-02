@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { format, parse, addDays } from 'date-fns';
-import idLocale from 'date-fns/locale/id';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 function Booking({ productId }) {
   const [formData, setFormData] = useState({
@@ -12,10 +12,12 @@ function Booking({ productId }) {
     phoneNumber: '',
     email: '',
     productid: '',
-    image: '',
+    file: '',
+    avatar: '',
+    status: 'pending',
     startDate: "",
     duration: "",
-    isNeedNotification: false,
+    isNeedNotification: true,
   });
 
   const navigate = useNavigate();
@@ -23,21 +25,23 @@ function Booking({ productId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const newFormData = {
+    const payload = {
       firstName: formData.firstName,
       middleName: formData.middleName,
       lastName: formData.lastName,
       email: formData.email,
-      productid: formData.productid,
+      productid: productId,
       status: formData.status,
-      image: formData.image,
+      image: formData.file,
       startDate: formData.startDate,
       duration: formData.duration,
       isNeedNotification: formData.isNeedNotification,
     };
 
+    console.log(payload)
+
     try {
-      axios.post("https://seven-backend-api.vercel.app/api/v1/cms/bookings", newFormData)
+      axios.post("https://seven-backend-api.vercel.app/api/v1/cms/bookings", payload)
         .then((response) => {
           console.log('Data sent successfully:', response.data);
           navigate("/success-booking");
@@ -50,8 +54,49 @@ function Booking({ productId }) {
     }
   };
 
-  const handleInputChange = (e) => {
+  const uploadImage = async (file) => {
+    let formData = new FormData();
+    formData.append('avatar', file);
+    const res = axios.post("https://seven-backend-api.vercel.app/api/v1/cms/images", formData, true);
+    return res;
+  };
+
+  const handleInputChange = async (e) => {
     const { name, value } = e.target;
+
+    if (e.target.name === 'avatar') {
+      if (
+        e?.target?.files[0]?.type === 'image/jpg' ||
+        e?.target?.files[0]?.type === 'image/png' ||
+        e?.target?.files[0]?.type === 'image/jpeg'
+      ) {
+        var size = parseFloat(e.target.files[0].size / 3145728).toFixed(2);
+
+        if (size > 2) {
+          setFormData({
+            ...formData,
+            file: '',
+            [e.target.name]: '',
+          });
+        } else {
+          const res = await uploadImage(e.target.files[0]);
+
+          setFormData({
+            ...formData,
+            file: res.data.data._id,
+            dataImage:res.data.data.dataImage,
+            typeImage:res.data.data.typeImage,
+            [e.target.name]: res.data.data.name,
+          });
+        }
+      } else {
+        setFormData({
+          ...formData,
+          file: '',
+          [e.target.name]: '',
+        });
+      }
+    }
 
     if (name === "startDate") {
       setFormData((prevData) => ({
@@ -86,6 +131,20 @@ function Booking({ productId }) {
       <div className='flex justify-center lg:pt-10'>
 
         <form onSubmit={handleSubmit} className='pb-10 px-5'>
+        <div className="mb-4">
+            <label htmlFor="avatar" className="font-medium mb-1">
+              Unggah Gambar:
+            </label>
+            <input
+              type="file"
+              id="avatar"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-400"
+              name="avatar"
+              onChange={handleInputChange}
+              accept="image/*"
+            />
+          </div>
+
           <div className="mb-4">
             <label htmlFor="firstName" className="font-medium mb-1">
               Nama Depan:
@@ -122,10 +181,24 @@ function Booking({ productId }) {
           </div>
 
           <div className="mb-4">
-            <label htmlFor="image" className="font-medium mb-1">
-              Image ID:
+            <label htmlFor="startDate" className="font-medium mb-1">
+              Tanggal Mulai:
             </label>
-            <input type="text" id="image" className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-400" placeholder="Masukan Image ID" name="image" value={formData.image} onChange={handleInputChange} required />
+            <DatePicker
+              selected={formData.startDate}
+              onChange={(date) =>
+                setFormData({ ...formData, startDate: date })
+              }
+              showTimeSelect
+              timeFormat="HH:mm"
+              timeIntervals={15}
+              timeCaption="Time"
+              dateFormat="MMMM d, yyyy h:mm aa"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-400"
+              id="startDate"
+              name="startDate"
+              required
+            />
           </div>
 
           <div className="mb-4">
