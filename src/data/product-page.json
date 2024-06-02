@@ -1,0 +1,19 @@
+{
+    "data":{
+        "product":
+        [
+            {
+                "name_product": "product1",
+                "image_product": "/assets/image/product-1.png"
+            },
+            {
+                "name_product": "product1",
+                "image_product": "/assets/image/product-1.png"
+            },
+            {
+                "name_product": "product2",
+                "image_product": "/assets/image/product-1.png"
+            }
+        ]
+    }
+}
