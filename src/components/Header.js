@@ -45,9 +45,9 @@ const Header = () => {
             {/* Menggunakan logika kondisional untuk menampilkan button */}
             {showButton && (
               <button className="btn px-7 py-1 rounded-md bg-green hover:bg-green-700 md:btn-lg transition-all text-white">
-                <p>
-                  Pesan Sekarang
-                </p>
+                <a href="https://maps.app.goo.gl/b5TKDeX75u9LExsm6">
+                  Lokasi 7Seven
+                </a>
               </button>
             )}
           </div>
