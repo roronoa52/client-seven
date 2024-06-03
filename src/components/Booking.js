@@ -56,12 +56,9 @@ function Booking({ productId }) {
       isNeedNotification: formData.isNeedNotification,
     };
 
-    console.log(payload)
-
     try {
       axios.post("https://seven-backend-api.vercel.app/api/v1/cms/bookings", payload)
         .then((response) => {
-          console.log('Data sent successfully:', response.data);
           navigate("/success-booking");
         })
         .catch(error => {

@@ -16,7 +16,6 @@ function Login() {
         if (authToken) {
         navigate("/dashboard")
         } else {
-        console.log('Authorization Token not found in cookies.');
         navigate("/login-admin")
         }
     },[authorization]);
