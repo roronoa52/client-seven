@@ -48,7 +48,7 @@ function Booking({ productId }) {
       productid: productId,
       status: formData.status,
       image: formData.file,
-      startDate: formData.startDate,
+      startDate: new Date(formData.startDate).toISOString(),
       duration: formData.duration,
       isNeedNotification: formData.isNeedNotification,
     };
