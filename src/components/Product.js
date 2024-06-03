@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 function Product() {
-
   const [products, setProducts] = useState([]);
   const [dataFetched, setDataFetched] = useState(false);
   let navigate = useNavigate();
@@ -42,15 +41,19 @@ function Product() {
           {products.data === undefined ? (
             <div className="text-center text-2xl text-white">Tidak Ada Data</div>
           ) : (
-            products.data.map((product, index) => {
+            products.data.map((product) => {
               const formattedNumber = product.price.toLocaleString('id-ID');
               const imageUrl = `data:${product.image.typeImage};base64,${product.image.dataImage}`;
               return (
-                <div key={product._id} className="card bg-white border-2 border-black m-4 p-4 w-64">
-                  <img src={imageUrl} alt={product.name} className="w-full object-cover" />
-                  <h2 className="text-3xl font-bold text-secondary my-4">{product.name}</h2>
-                  <p className="text-lg text-black font-semibold">Harga perjam: {formattedNumber}</p>
-                  <button onClick={() => handleBookingClick(product._id)} className="mt-4 bg-primary text-white px-4 py-2 rounded">Booking</button>
+                <div key={product._id} className="card bg-white border-2 border-black m-4 p-4 w-64 flex flex-col">
+                  <div className="flex-grow">
+                    <img src={imageUrl} alt={product.name} className="w-full object-cover h-48" />
+                  </div>
+                  <div className="mt-4">
+                    <h2 className="text-3xl font-bold text-secondary my-4">{product.name}</h2>
+                    <p className="text-lg text-black font-semibold">Harga perjam: {formattedNumber}</p>
+                  </div>
+                  <button onClick={() => handleBookingClick(product._id)} className="mt-auto bg-primary text-white px-4 py-2 rounded">Booking</button>
                 </div>
               );
             })
