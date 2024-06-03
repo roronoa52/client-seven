@@ -40,6 +40,9 @@ function Booking({ productId }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const startDate = new Date(formData.startDate);
+    startDate.setHours(startDate.getHours() + 7);
+
     const payload = {
       firstName: formData.firstName,
       middleName: formData.middleName,
@@ -48,10 +51,12 @@ function Booking({ productId }) {
       productid: productId,
       status: formData.status,
       image: formData.file,
-      startDate: new Date(formData.startDate).toISOString(),
+      startDate: startDate.toISOString(),
       duration: formData.duration,
       isNeedNotification: formData.isNeedNotification,
     };
+
+    console.log(payload)
 
     try {
       axios.post("https://seven-backend-api.vercel.app/api/v1/cms/bookings", payload)
