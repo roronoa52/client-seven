@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { Spinner } from 'react-bootstrap';
 
 function Product() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState(null); // Initialize as null
+  const [loading, setLoading] = useState(true);
   const [dataFetched, setDataFetched] = useState(false);
   let navigate = useNavigate();
 
@@ -12,21 +14,25 @@ function Product() {
   };
 
   useEffect(() => {
-    if (products.length === 0) {
-      fetchProducts();
-    }
+    fetchProducts();
+    const timer = setTimeout(() => {
+      if (!dataFetched) {
+        setLoading(false);
+      }
+    }, 5000);
+
+    return () => clearTimeout(timer);
   }, [dataFetched]);
 
   const fetchProducts = async () => {
-    if (products.length === 0) {
-      axios.get('https://seven-backend-api.vercel.app/api/v1/cms/products')
-        .then((res) => {
-          setProducts(res.data);
-          setDataFetched(true);
-        })
-        .catch((error) => {
-          console.error('Error fetching products:', error);
-        });
+    try {
+      const res = await axios.get('https://seven-backend-api.vercel.app/api/v1/cms/products');
+      setProducts(res.data);
+      setDataFetched(true);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      setLoading(false);
     }
   };
 
@@ -37,7 +43,11 @@ function Product() {
           <h1 className="text-white font-bold">Meja yang tersedia</h1>
         </div>
         <div className="flex justify-center flex-wrap lg:pt-10">
-          {products.data === undefined ? (
+          {loading ? (
+            <div className="text-center text-2xl text-white">
+             Loading...
+            </div>
+          ) : products === null || products.data.length === 0 ? (
             <div className="text-center text-2xl text-white">Tidak Ada Data</div>
           ) : (
             products.data.map((product) => {

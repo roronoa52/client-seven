@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 // Import Component
 import Nav from "../components/Nav";
@@ -9,6 +10,12 @@ const Header = () => {
   const [showButton, setShowButton] = useState(true);
 
   useEffect(() => {
+    // Periksa apakah pengguna sudah login
+    const token = localStorage.getItem("token");
+    if (token) {
+      setShowButton(false);
+    }
+
     const handleScroll = () => {
       window.scrollY > 50 ? setBg(true) : setBg(false);
     };
@@ -22,6 +29,14 @@ const Header = () => {
   // Fungsi untuk mengubah tampilan button
   const hideButton = () => {
     setShowButton(false);
+  };
+
+  // Fungsi untuk logout
+  const handleLogout = () => {
+    // Hapus token dari localStorage
+    localStorage.removeItem("token");
+    // Redirect ke halaman login atau halaman lain yang sesuai
+    window.location.href = "/"; // Ganti "/login" dengan rute yang sesuai
   };
 
   return (
@@ -45,10 +60,22 @@ const Header = () => {
             {/* Menggunakan logika kondisional untuk menampilkan button */}
             {showButton && (
               <button className="btn px-7 py-1 rounded-md bg-green hover:bg-green-700 md:btn-lg transition-all text-white">
-                <a href="https://maps.app.goo.gl/b5TKDeX75u9LExsm6">
-                  Lokasi 7Seven
+                <a href="https://seven-backend-api.vercel.app/api/v1/cms/google">
+                  Login
                 </a>
               </button>
+            )}
+            {/* Tombol logout */}
+            {!showButton && (
+              <button className="btn px-7 py-1 rounded-md bg-green hover:bg-red-700 md:btn-lg transition-all text-white" onClick={handleLogout}>
+                Logout
+              </button>
+            )}
+
+            {!showButton && (
+              <a href="/my-booking" className="btn px-7 py-1 rounded-md bg-green hover:bg-red-700 md:btn-lg transition-all text-white">
+               My Booking
+              </a>
             )}
           </div>
         </div>
