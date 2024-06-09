@@ -9,6 +9,7 @@ function MyBooking() {
   const [bookings, setBookings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isButtonClicked, setIsButtonClicked] = useState(false); // State untuk menandai apakah tombol sudah diklik
   let navigate = useNavigate();
 
   useEffect(() => {
@@ -32,10 +33,33 @@ function MyBooking() {
     }
   };
 
+  const handleCalendarButtonClick = async (bookingId) => {
+    const token = localStorage.getItem('token');
+    if (!isButtonClicked) {
+      try {
+        setIsButtonClicked(true); // Set tombol menjadi sudah diklik
+        const res = await axios.get(`https://seven-backend-api.vercel.app/api/v1/cms/google-calendar/${bookingId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        // Lakukan apa pun yang perlu dilakukan setelah permintaan berhasil
+      } catch (error) {
+        // Tangani error jika terjadi
+        console.error('Error setting up calendar:', error);
+        // Jika terjadi error, Anda bisa mengizinkan pengguna untuk mencoba lagi dengan mengatur kembali state isButtonClicked menjadi false
+        setIsButtonClicked(false);
+      }
+    }
+  };
+
   return (
     <>
-    <Header/>
-      <section id="product" className="lg:h-full bg-black lg:bg-cover lg:bg-center lg:bg-no-repeat py-32 lg:py-0 overflow-hidden">
+      <Header />
+      <section
+        id="product"
+        className="lg:h-full bg-black lg:bg-cover lg:bg-center lg:bg-no-repeat py-32 lg:py-0 overflow-hidden"
+      >
         <div className="text-center text-3xl mb-5 lg:text-4xl lg:pt-32">
           <h1 className="text-white font-bold">Booking</h1>
         </div>
@@ -52,7 +76,9 @@ function MyBooking() {
             bookings.map((booking) => {
               const formattedNumber = booking.total.toLocaleString('id-ID');
               const imageUrl = `data:${booking.image.typeImage};base64,${booking.image.dataImage}`;
-              
+              const isNotificationNeeded = booking.isNeedNotification;
+              const status = booking.status;
+  
               return (
                 <div key={booking._id} className="flex flex-col items-start bg-white border-2 border-black m-4 p-4 max-w-md">
                   <div className="w-full">
@@ -63,14 +89,21 @@ function MyBooking() {
                     <ul>
                       <li><p className="text-lg">Email: {booking.email}</p></li>
                       <li><p className="text-lg">Total: {formattedNumber}</p></li>
-                      <li><p className="text-lg">Status: {booking.status}</p></li>
+                      <li><p className="text-lg">Status: {status}</p></li>
                       <li><p className="text-lg">
-                      Mulai main: <span className="font-semibold">{format(new Date(booking.startDate), "dd MMMM yyyy 'pukul' HH:mm")}</span></p></li>
+                        Mulai main: <span className="font-semibold">{format(new Date(booking.startDate), "dd MMMM yyyy 'pukul' HH:mm")}</span></p></li>
                       <li><p className="text-lg">
-                      Selesai main: <span className="font-semibold">{format(new Date(booking.endDate), "dd MMMM yyyy 'pukul' HH:mm")}</span>
+                        Selesai main: <span className="font-semibold">{format(new Date(booking.endDate), "dd MMMM yyyy 'pukul' HH:mm")}</span>
                       </p></li>
                       <li><p className="text-lg">Lama main: {booking.duration}</p></li>
                       <li><p className="text-lg">Lokasi main: {booking.product.name}</p></li>
+                      {isNotificationNeeded && status === "berhasil" && (
+                        <li>
+                          <button onClick={() => handleCalendarButtonClick(booking._id)} disabled={isButtonClicked} className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            {isButtonClicked ? "Cek Google Calendar Anda" : "Pasang ke calendar"}
+                          </button>
+                        </li>
+                      )}
                     </ul>
                   </div>
                 </div>
