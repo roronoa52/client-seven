@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
 import Header from './Header';
-import { format } from 'date-fns';
+import { format, subHours } from 'date-fns'; // Import subHours
 
 function MyBooking() {
   const [bookings, setBookings] = useState(null);
@@ -76,7 +76,9 @@ function MyBooking() {
               const imageUrl = `data:${booking.image.typeImage};base64,${booking.image.dataImage}`;
               const isNotificationNeeded = booking.isNeedNotification;
               const status = booking.status;
-  
+              const startDateMinus7Hours = subHours(new Date(booking.startDate), 7);
+              const endDateMinus7Hours = subHours(new Date(booking.endDate), 7);
+
               return (
                 <div key={booking._id} className="flex flex-col items-start bg-white border-2 border-black m-4 p-4 max-w-md">
                   <div className="w-full">
@@ -89,9 +91,9 @@ function MyBooking() {
                       <li><p className="text-lg">Total: {formattedNumber}</p></li>
                       <li><p className="text-lg">Status: {status}</p></li>
                       <li><p className="text-lg">
-                        Mulai main: <span className="font-semibold">{format(new Date(booking.startDate), "dd MMMM yyyy 'pukul' HH:mm")}</span></p></li>
+                        Mulai main: <span className="font-semibold">{format(startDateMinus7Hours, "dd MMMM yyyy 'pukul' HH:mm")}</span></p></li>
                       <li><p className="text-lg">
-                        Selesai main: <span className="font-semibold">{format(new Date(booking.endDate), "dd MMMM yyyy 'pukul' HH:mm")}</span>
+                        Selesai main: <span className="font-semibold">{format(endDateMinus7Hours, "dd MMMM yyyy 'pukul' HH:mm")}</span>
                       </p></li>
                       <li><p className="text-lg">Lama main: {booking.duration}</p></li>
                       <li><p className="text-lg">Lokasi main: {booking.product.name}</p></li>
