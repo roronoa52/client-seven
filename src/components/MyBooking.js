@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { Spinner } from 'react-bootstrap';
 import Header from './Header';
 import { format, subHours } from 'date-fns'; // Import subHours
@@ -9,8 +8,6 @@ function MyBooking() {
   const [bookings, setBookings] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isButtonClicked, setIsButtonClicked] = useState(false); // State untuk menandai apakah tombol sudah diklik
-  let navigate = useNavigate();
 
   useEffect(() => {
     fetchBookings();
@@ -35,19 +32,17 @@ function MyBooking() {
 
   const handleCalendarButtonClick = async (bookingId) => {
     const token = localStorage.getItem('token');
-    if (!isButtonClicked) {
-      try {
-        setIsButtonClicked(true);
-        const res = await axios.get(`https://seven-backend-api.vercel.app/api/v1/cms/google-calendar/${bookingId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+    try {
+    
+      await axios.get(`https://seven-backend-api.vercel.app/api/v1/cms/google-calendar/${bookingId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
 
-      } catch (error) {
-        console.error('Error setting up calendar:', error);
-        setIsButtonClicked(false);
-      }
+    } catch (error) {
+      console.error('Error setting up calendar:', error);
+      
     }
   };
 
@@ -99,8 +94,8 @@ function MyBooking() {
                       <li><p className="text-lg">Lokasi main: {booking.product.name}</p></li>
                       {isNotificationNeeded && status === "berhasil" && (
                         <li>
-                          <button onClick={() => handleCalendarButtonClick(booking._id)} disabled={isButtonClicked} className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                            {isButtonClicked ? "Cek Google Calendar Anda" : "Pasang ke calendar"}
+                          <button onClick={() => handleCalendarButtonClick(booking._id)} className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Pasang ke calendar
                           </button>
                         </li>
                       )}
