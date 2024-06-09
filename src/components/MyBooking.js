@@ -37,17 +37,15 @@ function MyBooking() {
     const token = localStorage.getItem('token');
     if (!isButtonClicked) {
       try {
-        setIsButtonClicked(true); // Set tombol menjadi sudah diklik
+        setIsButtonClicked(true);
         const res = await axios.get(`https://seven-backend-api.vercel.app/api/v1/cms/google-calendar/${bookingId}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
-        // Lakukan apa pun yang perlu dilakukan setelah permintaan berhasil
+
       } catch (error) {
-        // Tangani error jika terjadi
         console.error('Error setting up calendar:', error);
-        // Jika terjadi error, Anda bisa mengizinkan pengguna untuk mencoba lagi dengan mengatur kembali state isButtonClicked menjadi false
         setIsButtonClicked(false);
       }
     }

@@ -57,7 +57,12 @@ function Booking({ productId }) {
     };
 
     try {
-      axios.post("https://seven-backend-api.vercel.app/api/v1/cms/bookings", payload)
+      const token = localStorage.getItem('token');
+      axios.post("https://seven-backend-api.vercel.app/api/v1/cms/bookings", payload,{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
         .then((response) => {
           navigate("/success-booking");
         })
