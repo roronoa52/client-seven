@@ -1,10 +1,24 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { XIcon } from '@heroicons/react/outline'
 import { MenuAlt3Icon } from '@heroicons/react/outline'
 import { motion } from 'framer-motion'
 
 function NavMobile() {
   const [isOpen, setIsOpen] = useState(false)
+  const [showButton, setShowButton] = useState(true);
+
+  useEffect(() => {
+    // Periksa apakah pengguna sudah login
+    const token = localStorage.getItem("token");
+    if (token) {
+      setShowButton(false);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    window.location.href = "/";
+  };
 
   const circleVariants = {
     hidden:{
@@ -48,7 +62,29 @@ function NavMobile() {
         <a className='text-white text-xl cursor-pointer capitalize pb-5' href='/'>Beranda</a>
         <a className='text-white text-xl cursor-pointer capitalize pb-5' href='/#about'>Tentang</a>
         <a className='text-white text-xl cursor-pointer capitalize pb-10' href='/product'>Produk</a>
-        <a className='text-white text-xl cursor-pointer capitalize border-4 font-bold px-5 py-2' href='/booking'>Booking</a>
+        <div className='flex flex-col gap-[5px]'>
+          {showButton && (
+                <button className="text-white text-xl cursor-pointer capitalize border-4 font-bold px-5 py-2">
+                  <a href="https://seven-backend-api.vercel.app/api/v1/cms/google">
+                    Login
+                  </a>
+                </button>
+              )
+          }
+          {!showButton && (
+              <button className="btn px-7 py-1 rounded-md bg-green hover:bg-red-700 md:btn-lg transition-all text-white" onClick={handleLogout}>
+                Logout
+              </button>
+            )
+          }
+          {!showButton && (
+              <a href="/my-booking" className="btn px-7 py-1 rounded-md bg-green hover:bg-red-700 md:btn-lg transition-all text-white">
+               My Booking
+              </a>
+            )
+          }
+          
+        </div>
       </motion.ul>
     </nav>
   )

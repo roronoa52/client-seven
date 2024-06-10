@@ -26,17 +26,9 @@ const Header = () => {
     };
   }, []);
 
-  // Fungsi untuk mengubah tampilan button
-  const hideButton = () => {
-    setShowButton(false);
-  };
-
-  // Fungsi untuk logout
   const handleLogout = () => {
-    // Hapus token dari localStorage
     localStorage.removeItem("token");
-    // Redirect ke halaman login atau halaman lain yang sesuai
-    window.location.href = "/"; // Ganti "/login" dengan rute yang sesuai
+    window.location.href = "/";
   };
 
   return (
