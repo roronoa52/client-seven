@@ -58,22 +58,22 @@ function Booking({ productId }) {
 
     console.log(payload)
 
-    // try {
-    //   const token = localStorage.getItem('token');
-    //   axios.post("https://seven-backend-api.vercel.app/api/v1/cms/bookings", payload,{
-    //     headers: {
-    //       Authorization: `Bearer ${token}`
-    //     }
-    //   })
-    //     .then((response) => {
-    //       navigate("/success-booking");
-    //     })
-    //     .catch(error => {
-    //       console.error('Error:', error.response.data);
-    //     });
-    // } catch (error) {
-    //   console.error('Error sending data:', error);
-    // }
+    try {
+      const token = localStorage.getItem('token');
+      axios.post("https://seven-backend-api.vercel.app/api/v1/cms/bookings", payload,{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+        .then((response) => {
+          navigate("/success-booking");
+        })
+        .catch(error => {
+          console.error('Error:', error.response.data);
+        });
+    } catch (error) {
+      console.error('Error sending data:', error);
+    }
   };
 
   const uploadImage = async (file) => {
