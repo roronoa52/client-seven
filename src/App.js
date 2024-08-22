@@ -47,18 +47,16 @@ const RedirectHandler = () => {
 
 const App = () => {
   return (
-    <AlertProvider template={AlertTemplate} {...alertOptions}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/product" element={<ProductPage />} />
-          <Route path="/booking" element={<BookingPage />} />
-          <Route path="/my-booking" element={<MyBooking />} />
-          <Route path="/success-booking" element={<Success />} />
-          <Route path="/redirect" element={<RedirectHandler />} />
-        </Routes>
-      </BrowserRouter>
-    </AlertProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/product" element={<ProductPage />} />
+        <Route path="/booking" element={<BookingPage />} />
+        <Route path="/my-booking" element={<MyBooking />} />
+        <Route path="/success-booking" element={<Success />} />
+        <Route path="/redirect" element={<RedirectHandler />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
