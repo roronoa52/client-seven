@@ -30,7 +30,7 @@ function Booking({ productId }) {
     const fetchBanks = async () => {
       try {
         const response = await axios.get('https://seven-backend-api.vercel.app/api/v1/cms/banks');
-        console.log("tes")
+        alert.error("tes notif")
         setBanks(response.data.data);
       } catch (error) {
         console.error('Error fetching banks:', error);
