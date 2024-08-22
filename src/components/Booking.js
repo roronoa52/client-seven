@@ -72,7 +72,7 @@ function Booking({ productId }) {
         })
         .catch(error => {
           console.error('Error:', error.response.data);
-          // alert.error(error.response.data)
+          alert.error(error.response.data.msg)
         });
     } catch (error) {
       console.error('Error sending data:', error);
