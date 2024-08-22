@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation, useNavigate } from "react-router-dom";
-// import components
+import { positions, Provider as AlertProvider } from "react-alert";
+import AlertTemplate from "react-alert-template-basic";
 
 import LandingPage from "./pages/LandingPage";
 import ProductPage from "./pages/ProductPage";
@@ -8,8 +9,11 @@ import BookingPage from "./pages/BookingPage";
 import Success from "./components/Success";
 import MyBooking from "./components/MyBooking";
 
+const alertOptions = {
+  timeout: 5000,
+  position: positions.TOP_CENTER,
+};
 
-// Hook untuk mendapatkan query parameters
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
 };
@@ -43,16 +47,18 @@ const RedirectHandler = () => {
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/product" element={<ProductPage />} />
-        <Route path="/booking" element={<BookingPage />} />
-        <Route path="/my-booking" element={<MyBooking />} />
-        <Route path="/success-booking" element={<Success />} />
-        <Route path="/redirect" element={<RedirectHandler />} />
-      </Routes>
-    </BrowserRouter>
+    <AlertProvider template={AlertTemplate} {...alertOptions}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/product" element={<ProductPage />} />
+          <Route path="/booking" element={<BookingPage />} />
+          <Route path="/my-booking" element={<MyBooking />} />
+          <Route path="/success-booking" element={<Success />} />
+          <Route path="/redirect" element={<RedirectHandler />} />
+        </Routes>
+      </BrowserRouter>
+    </AlertProvider>
   );
 };
 

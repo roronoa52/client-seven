@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import axios from 'axios';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { useAlert } from 'react-alert';
 
 function Booking({ productId }) {
   const [formData, setFormData] = useState({
@@ -19,6 +20,7 @@ function Booking({ productId }) {
     duration: "",
     isNeedNotification: false,
   });
+  const alert = useAlert()
 
   const [banks, setBanks] = useState([]);
 
@@ -28,9 +30,11 @@ function Booking({ productId }) {
     const fetchBanks = async () => {
       try {
         const response = await axios.get('https://seven-backend-api.vercel.app/api/v1/cms/banks');
+        console.log("tes")
         setBanks(response.data.data);
       } catch (error) {
         console.error('Error fetching banks:', error);
+        alert.error(error)
       }
     };
 
@@ -56,8 +60,6 @@ function Booking({ productId }) {
       isNeedNotification: formData.isNeedNotification,
     };
 
-    console.log(payload)
-
     try {
       const token = localStorage.getItem('token');
       axios.post("https://seven-backend-api.vercel.app/api/v1/cms/bookings", payload,{
@@ -70,9 +72,11 @@ function Booking({ productId }) {
         })
         .catch(error => {
           console.error('Error:', error.response.data);
+          alert.error(error.response.data)
         });
     } catch (error) {
       console.error('Error sending data:', error);
+      alert.error(error)
     }
   };
 
